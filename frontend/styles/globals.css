@@ -2,20 +2,102 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+html, body {
+  height: 100%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;                  /* Line 11 and 12 are so that footer stays at the bottom if the content is short */
 }
 
+main {
+  flex: 1;                            /* So that footer is pushed down when needed */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  margin: 3em;
+}
+
+.company-contact-info:hover {
+  color: #fcd913;
+  text-decoration: underline;
+  font-weight: 500;
+}
+
+@font-face {
+  font-family: "Corbel Light";
+  src: url("/fonts/corbel-light.ttf") format("truetype");
+  font-weight: 300;
+  font-style: normal;
+}
+
+/* Custom radial gradient for the hover effect */
+.sun-hover {
+  background-color: #e5e7eb;
+  transition: background 0.5s ease-in-out;
+}
+
+.sun-hover:hover {
+  background: linear-gradient(#fcd913 0%, white 50%);
+}
+
+/* To apply the fonts */
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: "Corbel Light", sans-serif;          /* Will fallback to sans-serif if Corbel is not available */
+  font-size: 16px;
+  line-height: 1.5;
+}
+
+/* For headers' font family and font sizes */
+h1, h2, h3, h4 {
+  font-family: --font-montserrat, sans-serif;
+}
+
+h1 {
+  font-size: 32px;
+}
+
+h2 {
+  font-size: 28px;
+}
+
+h3 {
+  font-size: 24px;
+}
+
+h4 {
+  font-size: 20px;
+}
+
+@media (max-width: 768px) {
+  body{
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 28px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+
+  h3 {
+    font-size: 20px;
+  }
+
+  h4 {
+    font-size: 18px;
+  }
+
+}
+
+/* Font for Buttons */
+button {
+  font-family: "--font-poppins", sans-serif;
+  font-weight: 600;
+  text-transform: uppercase;
 }
