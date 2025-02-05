@@ -7,6 +7,7 @@ export default function SolarCalculator() {
     const [state, setState] = useState("");                                // For optional state selection.
     const [result, setResult] = useState(null);
     const [showForm, setShowForm] = useState(false);
+    const [isCalculating, setIsCalculating] = useState(false);
     const printRef = useRef(null);                                        // Reference for the printable section.
 
     const TNB_TARIFF = 0.509;                                             // RM per kWh.
@@ -21,6 +22,8 @@ export default function SolarCalculator() {
             return;
         }
 
+        setIsCalculating(true);
+
         //  System Sizing
         const monthlyEnergy = bill / TNB_TARIFF;
         const dailyEnergy = monthlyEnergy / 30;
@@ -31,27 +34,46 @@ export default function SolarCalculator() {
 
         // Loan Payment Calculation
         const targetMonthlyPayment = bill * TARGET_SAVINGS;
-        const r = INTEREST_RATE / 12;                                    // Monthly interest rate.
-        const n = 12 * 10;                                              // Assuming 10-year loan term.
+        const r = INTEREST_RATE / 12;                                    // Divided by 12 to get monthly interest rate.
+        const n = 12 * 10;                                               // Assuming 10-year loan term.
         const monthlyInstallment =
             (totalSystemCost * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 
-        // For storing quote result
-        setResult({
-            systemSize: systemSize.toFixed(2),
-            totalCost: totalSystemCost.toFixed(2),
-            monthlyInstallment: monthlyInstallment.toFixed(2),
-        });
+        setTimeout(() => {
+            setIsCalculating(false);
+
+            // For storing quote result
+            setResult({
+                systemSize: systemSize.toFixed(2),
+                totalCost: totalSystemCost.toFixed(2),
+                monthlyInstallment: monthlyInstallment.toFixed(2),
+            });
+        }, 1000);
+
     };
 
     const handlePrint = () => {
-        const printContent = printRef.current;
-        if (printContent) {
-            const originalContents = document.body.innerHTML;
-            document.body.innerHTML = printContent.innerHTML;
-            window.print();
-            document.body.innerHTML = originalContents;
-        };
+        if (printRef.current) {
+            const printWindow = window.open("", "_blank");              // Open a separate print window to keep the main UI intact.
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title> Print Quote </title>
+                        <style>
+                            body { font-family: Corbel Light, sans-serif; padding: 20px; }
+                            h3 { text-align: center; }
+                            p { margin-bottom: 10px; }
+                        </style>
+                    </head>
+                    <body>
+                        ${printRef.current.innerHTML}
+                    </body>
+                </html>
+                `);
+            printWindow.document.close();
+            printWindow.print();
+            printWindow.onafterprint = () => printWindow.close();
+        }
     };
 
     const handleShowForm = () => {
@@ -62,68 +84,73 @@ export default function SolarCalculator() {
         <div>
             <h2>Solar Savings Calculator</h2>
 
-            {/* Monthly Bill Input */}
-            <label className="block mt-4">Monthly TNB Bill (RM):</label>
-            <input
-                type="number"
-                value={bill}
-                onChange={(e) => setBill(e.target.value)}
-                className="border p-2 w-full rounded"
-                placeholder="Enter your bill amount"
-            />
-
-            {/* Location Dropdown (Optional) */}
-            <label className="block mt-4">Location (Optional):</label>
-            <select
-                value={state}
-                onChange={(e) => setState(e.target.value)}
-                className="border p-2 w-full rounded"
-            >
-                <option value="">Select a state</option>
-                <option value="johor">Johor</option>
-                <option value="kedah">Kedah</option>
-                <option value="kelantan">Kelantan</option>
-                <option value="malacca">Malacca</option>
-                <option value="negerisembilan">Negeri Sembilan</option>
-                <option value="pahang">Pahang</option>
-                <option value="penang">Penang</option>
-                <option value="perak">Perak</option>
-                <option value="perlis">Perlis</option>
-                <option value="sabah">Sabah</option>
-                <option value="sarawak">Sarawak</option>
-                <option value="selangor">Selangor</option>
-                <option value="terengganu">Terengganu</option>
-            </select>
-
-            {/* Calculate Button */}
-            <CTAButton text="Calculate Savings" onClick={handleCalculate} />
-
-            {/* Display Results */}
-            {result && (
-                <div>
-                    <div ref={printRef} className='my-7 py-10 bg-white rounded shadow'>
-                        <h3 className='text-lg font semibold mb-6'>Quote Details</h3>
-                        <p><b>Estimated System Size:</b> {result.systemSize} kWp</p>
-                        <p><b>Total Sytem Cost:</b> RM {result.totalCost}</p>
-                        <p><b>Estimated Monthly Installment:</b> RM {result.monthlyInstallment}</p>
-                    </div>
-                    <div className="flex justify-end space-x-2 mt-4">
-                    {/* Print Button */}
-                    <CTAButton text="Print Quote" onClick={handlePrint} />
-                    {/* Request Callback Button */}
-                    <CTAButton text="Request Callback" onClick={handleShowForm} />
-                    </div>
-                </div>
-            )}
-
-            {/* To show Callback Form when Callback Button is clicked */}
-            {showForm &&
-                <CallbackForm
-                    quote={result}
-                    onClose={() => setShowForm(false)}
-                    onSubmit={(data) => console.log("Submitted", data)}
+            <div className="flex flex-col items-center mt-4">
+                {/* Monthly Bill Input */}
+                <label className="block mt-4">Monthly TNB Bill (RM):</label>
+                <input
+                    type="number"
+                    value={bill}
+                    onChange={(e) => setBill(e.target.value)}
+                    className="border p-2 w-64 rounded text-center"
+                    placeholder="Enter your bill amount"
                 />
-            }
+
+                {/* Location Dropdown (Optional) */}
+                <label className="block mt-4">Location (Optional):</label>
+                <select
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                    className="border p-2 w-64 rounded text-center"
+                >
+                    <option value="">Select a state</option>
+                    <option value="johor">Johor</option>
+                    <option value="kedah">Kedah</option>
+                    <option value="kelantan">Kelantan</option>
+                    <option value="malacca">Malacca</option>
+                    <option value="negerisembilan">Negeri Sembilan</option>
+                    <option value="pahang">Pahang</option>
+                    <option value="penang">Penang</option>
+                    <option value="perak">Perak</option>
+                    <option value="perlis">Perlis</option>
+                    <option value="sabah">Sabah</option>
+                    <option value="sarawak">Sarawak</option>
+                    <option value="selangor">Selangor</option>
+                    <option value="terengganu">Terengganu</option>
+                </select>
+
+                {/* Calculate Button */}
+                <div className="mt-7">
+                    <CTAButton text={isCalculating ? "Calculating..." : "Calculate"} onClick={handleCalculate} />
+                </div>
+
+                {/* Display Results */}
+                {result && (
+                    <div>
+                        <div ref={printRef} className='my-7 py-10 bg-white rounded shadow'>
+                            <h3 className='font semibold mb-6'>Quote Details</h3>
+                            <p><b>Estimated System Size:</b> {result.systemSize} kWp</p>
+                            <p><b>Total Sytem Cost:</b> RM {result.totalCost}</p>
+                            <p><b>Estimated Monthly Installment:</b> RM {result.monthlyInstallment}</p>
+                        </div>
+                        <div className="flex justify-end space-x-2 mt-4">
+                            {/* Print Button */}
+                            <CTAButton text="Print Quote" onClick={handlePrint} />
+                            {/* Request Callback Button */}
+                            <CTAButton text="Request Callback" onClick={handleShowForm} />
+                        </div>
+                    </div>
+                )}
+
+                {/* To show Callback Form with transition when Request Callback Button is clicked */}
+                {showForm && (
+                    <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center transition-opacity duration-300 ease-in-out">
+                            <CallbackForm
+                                quote={result}
+                                onClose={() => setShowForm(false)}
+                            />
+                    </div>
+                )}
+            </div>
         </div>
     );
 }
