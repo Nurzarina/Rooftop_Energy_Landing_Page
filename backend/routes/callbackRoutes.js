@@ -1,9 +1,9 @@
 import express from 'express';
-import CallbackRequest from "../models/CallbackRequest.js";
+import CallbackRequest from "../models/CallbackRequest.model.js";
 
 const router = express.Router();
 
-router.post("/", async (req, res) => {
+router.post("/api/callback", async (req, res) => {
     try {
         const { name, contact, systemSize, totalCost, monthlyInstallment } = req.body;
 
@@ -13,8 +13,8 @@ router.post("/", async (req, res) => {
         }
 
         // To save form data to MongoDB.
-        const callbacRequest = new CallbackRequest({ name, contact, systemSize, totalCost, monthlyInstallment });
-        await callbacRequest.save();
+        const callbackRequest = new CallbackRequest({ name, contact, systemSize, totalCost, monthlyInstallment });
+        await callbackRequest.save();
 
         res.status(201).json({ message: "Callback request submitted successfully" });
     } catch (error) {

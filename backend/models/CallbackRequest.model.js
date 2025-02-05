@@ -1,4 +1,4 @@
-import mongoose, { mongo } from 'mongoose';
+import mongoose from 'mongoose';
 
 const CallbackRequestSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -7,6 +7,8 @@ const CallbackRequestSchema = new mongoose.Schema({
     totalCost: { type: String, required: true },
     monthlyInstallment: { type: String, required: true },
     createdAt: {type: Date, default: Date.now },
-});
+}, { collection: "callbackrequests" });                         // The data was not saved into MongoDB without explicitly setting the collection name here.
 
-module.exports = mongoose.model("CallbackRequest", CallbackRequestSchema);
+const CallbackRequest = mongoose.model("CallbackRequest", CallbackRequestSchema);
+
+export default CallbackRequest;
