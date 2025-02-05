@@ -14,9 +14,6 @@ html, body {
 
 main {
   flex: 1;                            /* So that footer is pushed down when needed */
-  display: flex;
-  justify-content: center;
-  align-items: center;
   text-align: center;
   margin: 3em;
 }
@@ -34,13 +31,8 @@ main {
   font-style: normal;
 }
 
-/* Custom radial gradient for the hover effect */
-.sun-hover {
-  background-color: #e5e7eb;
-  transition: background 0.5s ease-in-out;
-}
-
-.sun-hover:hover {
+/* Brand background */
+.brand-bg {
   background: linear-gradient(#fcd913 0%, white 50%);
 }
 
