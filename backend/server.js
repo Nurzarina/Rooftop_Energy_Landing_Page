@@ -18,7 +18,7 @@ app.use(express.json());                // To make backend able to parse JSON bo
 app.use(cors());                        // To allow frontend from different localhost to make API requests.
 
 // Routes
-app.use('/', callbackRoutes);
+app.use('/api/callback', callbackRoutes);
 
 // Start server
 server.listen(PORT, () => {

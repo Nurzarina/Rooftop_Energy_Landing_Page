@@ -31,8 +31,8 @@ export default function SolarCalculator() {
 
         // Loan Payment Calculation
         const targetMonthlyPayment = bill * TARGET_SAVINGS;
-        const r = INTEREST_RATE / 12;                                    // Monthly interest rate.
-        const n = 12 * 10;                                              // Assuming 10-year loan term.
+        const r = INTEREST_RATE / 12;                                    // Divided by 12 to get monthly interest rate.
+        const n = 12 * 10;                                               // Assuming 10-year loan term.
         const monthlyInstallment =
             (totalSystemCost * r * Math.pow(1 + r, n)) / (Math.pow(1 + r, n) - 1);
 
@@ -121,7 +121,6 @@ export default function SolarCalculator() {
                 <CallbackForm
                     quote={result}
                     onClose={() => setShowForm(false)}
-                    onSubmit={(data) => console.log("Submitted", data)}
                 />
             }
         </div>

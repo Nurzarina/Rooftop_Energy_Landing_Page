@@ -3,7 +3,7 @@ import CallbackRequest from "../models/CallbackRequest.model.js";
 
 const router = express.Router();
 
-router.post("/api/callback", async (req, res) => {
+router.post("", async (req, res) => {
     try {
         const { name, contact, systemSize, totalCost, monthlyInstallment } = req.body;
 
