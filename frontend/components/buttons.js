@@ -5,7 +5,7 @@
             onClick={onClick}
             className="
                 bg-black text-white border border-white shadow-md rounded-md
-                mt-6 mb-6 px-6 py-3 text-lg transition-all duration-300
+                mt-6 mb-6 px-6 py-3 transition-all duration-300
                 ease-in-out hover:bg-gradient-to-r hover:from-[#fcd913]
                 hover:to-white hover:text-black hover:shadow-lg
             "
