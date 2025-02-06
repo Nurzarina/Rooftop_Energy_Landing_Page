@@ -28,6 +28,7 @@ The **Corbel Light** font used in this project is for **educational and personal
 
 ### Prerequisites
 - **Node.js** installed (v12 or later)
+- **npm**
 - **MongoDB**
 - **Git** for cloning the repository
 - **VS Code IDE**
