@@ -20,7 +20,7 @@ export default function Home() {
       <Navbar />
       <main>
         {/* Hero Section */}
-        <div className="relative h-[70vh] flex items-center justify-center text-center text-white bg-cover bg-center"
+        <div className="mt-6 relative h-[70vh] flex items-center justify-center text-center text-white bg-cover bg-center"
           style={{ backgroundImage: "url('/E8CzYLy7SoQ7JAdI1exA9Os4MM.avif')" }}>
           <div className="absolute inset-0 bg-black bg-opacity-60"></div>
           <div className="relative z-10 px-6">
