@@ -1,5 +1,4 @@
 import express from 'express';
-import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import http from 'http';
@@ -12,12 +11,23 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
+const allowedOrigins = [                                        // For better security, only allow frontend requests from these two domains.
+    process.env.ORIGIN_URL_DEPLOYED,
+    process.env.ORIGIN_URL_LOCAL
+];
 
 // Middleware
 app.use(express.json());                                        // To make backend able to parse JSON bodies.
-app.use(cors({ 
-    origin: 'https://resolarcalculator.netlify.app',            // For better security, only receive frontend request from this domain.
-    optionsSuccessStatus: 200                                   // Some legacy browsers (IE11, various SmartTVs) choke on 204
+app.use(
+    cors({
+        origin: (origin, callback) => {
+            if (!origin || allowedOrigins.includes(origin)) {   // To allow request from Postman or from allowedOrigins, else reject the request.
+                callback(null, true);
+            } else {
+                callback(new Error("Not allowed by CORS"));
+            }
+        },
+        optionsSuccessStatus: 200                               // Some legacy browsers (IE11, various SmartTVs) choke on 204
     }));
 
 // Routes
