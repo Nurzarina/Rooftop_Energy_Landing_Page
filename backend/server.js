@@ -14,14 +14,17 @@ const PORT = process.env.PORT || 5000;
 const server = http.createServer(app);
 
 // Middleware
-app.use(express.json());                // To make backend able to parse JSON bodies.
-app.use(cors());                        // To allow frontend from different localhost to make API requests.
+app.use(express.json());                                        // To make backend able to parse JSON bodies.
+app.use(cors({ 
+    origin: 'https://resolarcalculator.netlify.app',            // For better security, only receive frontend request from this domain.
+    optionsSuccessStatus: 200                                   // Some legacy browsers (IE11, various SmartTVs) choke on 204
+    }));
 
 // Routes
 app.use('/api/callback', callbackRoutes);
 
 // Start server
 server.listen(PORT, () => {
-    console.log(`Server running on port ${PORT}`);
-    connectMongoDB();
+    console.log(`Server running on port ${PORT}`);              // To let dev knows the server is currently running.
+    connectMongoDB();                                           // To connect to MongoDB database
 });
