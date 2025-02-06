@@ -20,7 +20,7 @@ export default function CallbackForm({ quote, onClose }) {
         setIsLoading(true);
 
         try {
-            const response = await axios.post("http://localhost:5000/api/callback", {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/callback`, {
                 name,
                 contact,
                 systemSize: quote.systemSize,
